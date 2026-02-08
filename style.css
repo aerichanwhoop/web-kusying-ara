@@ -1,0 +1,44 @@
+body {
+  background: linear-gradient(135deg, #fff1f7, #ffe3ef);
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: #ff6fae;
+}
+
+.score {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #ff4f9a;
+  font-weight: bold;
+}
+
+.area {
+  width: 260px;
+  height: 260px;
+  background-color: #ffffffaa;
+  margin: 30px auto;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+#cat {
+  font-size: 48px;
+  position: absolute;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+/* animasi lompat */
+.jump {
+  animation: jump 0.3s ease;
+}
+
+@keyframes jump {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-20px); }
+  100% { transform: translateY(0); }
+}
