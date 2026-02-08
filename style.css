@@ -1,44 +1,49 @@
 body {
-  background: linear-gradient(135deg, #fff1f7, #ffe3ef);
+  font-family: "Comic Sans MS", "Poppins", sans-serif;
+  background: linear-gradient(135deg, #ffd6e8, #fff3c4);
   text-align: center;
-  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 h1 {
-  color: #ff6fae;
+  color: #ff5fa2;
+  margin-top: 20px;
 }
 
-.score {
-  font-size: 18px;
-  margin-top: 10px;
-  color: #ff4f9a;
-  font-weight: bold;
+p {
+  color: #555;
 }
 
 .area {
-  width: 260px;
-  height: 260px;
-  background-color: #ffffffaa;
-  margin: 30px auto;
-  border-radius: 20px;
   position: relative;
+  width: 300px;
+  height: 300px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  margin: 20px auto;
   overflow: hidden;
 }
 
-#cat {
-  font-size: 48px;
+.cat {
   position: absolute;
+  font-size: 40px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.15s;
 }
 
-/* animasi lompat */
-.jump {
-  animation: jump 0.3s ease;
+.cat.jump {
+  transform: scale(1.3) rotate(10deg);
 }
 
-@keyframes jump {
-  0%   { transform: translateY(0); }
-  50%  { transform: translateY(-20px); }
-  100% { transform: translateY(0); }
+.info {
+  background: #fff;
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 16px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
 }

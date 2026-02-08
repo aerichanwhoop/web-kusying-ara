@@ -1,45 +1,72 @@
-const cat = document.getElementById("cat");
-
-// bikin elemen skor
-const scoreText = document.createElement("div");
-scoreText.className = "score";
-scoreText.innerText = "Skor: 0";
-document.body.insertBefore(scoreText, document.querySelector(".area"));
-
+const area = document.getElementById("game-area");
+const numCats = 5; // jumlah kucing
 let score = 0;
+let time = 30;
 
-const emojis = ["😺", "😹", "😻", "🙀", "😼"];
+let highScore = 0;
+localStorage.setItem("highScore", highScore);
 
-function randomPos() {
-  const area = document.querySelector(".area");
-  const maxX = area.clientWidth - 50;
-  const maxY = area.clientHeight - 50;
+// info skor
+const info = document.createElement("div");
+info.className = "info";
+document.body.insertBefore(info, area);
 
+function updateInfo() {
+  info.innerText = `Skor: ${score} | ⏰ ${time}s | 🏆 High: ${highScore}`;
+}
+
+updateInfo();
+
+// buat kucing
+const cats = [];
+for (let i = 0; i < numCats; i++) {
+  const cat = document.createElement("div");
+  cat.className = "cat";
+  cat.innerText = "😺";
+  area.appendChild(cat);
+  cats.push(cat);
+
+  cat.addEventListener("click", () => {
+    if (time <= 0) return;
+    score++;
+    updateInfo();
+    moveCat(cat);
+  });
+}
+
+// gerakin satu kucing
+function moveCat(cat) {
+  const maxX = area.clientWidth - 40;
+  const maxY = area.clientHeight - 40;
   const x = Math.random() * maxX;
   const y = Math.random() * maxY;
-
   cat.style.left = x + "px";
   cat.style.top = y + "px";
 
-  // emoji random
-  cat.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-
-  // animasi lompat
   cat.classList.add("jump");
-  setTimeout(() => cat.classList.remove("jump"), 300);
+  setTimeout(() => cat.classList.remove("jump"), 150);
 }
 
-// KHUSUS HP: pake touchstart
-cat.addEventListener("touchstart", (e) => {
-  e.preventDefault(); // penting
-  score++;
-  scoreText.innerText = "Skor: " + score;
-  randomPos();
-});
+// gerakin semua kucing
+function randomPositions() {
+  cats.forEach(cat => moveCat(cat));
+}
 
-// BIAR MASIH BISA DI LAPTOP
-cat.addEventListener("click", () => {
-  score++;
-  scoreText.innerText = "Skor: " + score;
-  randomPos();
-});
+// timer
+const timer = setInterval(() => {
+  time--;
+  updateInfo();
+  if (time <= 0) {
+    clearInterval(timer);
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem("highScore", highScore);
+      info.innerText = `🎉 NEW HIGH SCORE: ${highScore}!`;
+    } else {
+      info.innerText = `⏰ Habis! Skor: ${score} | 🏆 ${highScore}`;
+    }
+  }
+}, 1000);
+
+// posisi awal
+randomPositions();
