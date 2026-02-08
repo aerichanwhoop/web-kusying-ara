@@ -1,6 +1,6 @@
 const area = document.getElementById("game-area");
 const info = document.getElementById("info");
-const numCats = 5;
+const numCats = 6; // lebih banyak cats untuk lucu
 let score = 0;
 let time = 30;
 
@@ -13,11 +13,13 @@ function updateInfo() {
 updateInfo();
 
 // create cats
+const catEmojis = ["😹","😻","😸","😺","😼","😽"];
 const cats = [];
-for(let i=0; i<numCats; i++){
+
+for(let i=0;i<numCats;i++){
   const cat = document.createElement("div");
   cat.className = "cat";
-  cat.innerText = "😺";
+  cat.innerText = catEmojis[i % catEmojis.length];
   area.appendChild(cat);
   cats.push(cat);
 
@@ -29,7 +31,7 @@ for(let i=0; i<numCats; i++){
   });
 }
 
-// move a cat
+// move cat
 function moveCat(cat){
   const maxX = area.clientWidth - 50;
   const maxY = area.clientHeight - 50;
@@ -42,7 +44,7 @@ function moveCat(cat){
 }
 
 // initial positions
-cats.forEach(cat => moveCat(cat));
+cats.forEach(cat=>moveCat(cat));
 
 // timer
 const timer = setInterval(()=>{
