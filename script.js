@@ -1,72 +1,61 @@
 const area = document.getElementById("game-area");
-const numCats = 5; // jumlah kucing
+const info = document.getElementById("info");
+const numCats = 5;
 let score = 0;
 let time = 30;
 
-let highScore = 0;
-localStorage.setItem("highScore", highScore);
-
-// info skor
-const info = document.createElement("div");
-info.className = "info";
-document.body.insertBefore(info, area);
+let highScore = localStorage.getItem("highScore") || 0;
 
 function updateInfo() {
-  info.innerText = `Skor: ${score} | ⏰ ${time}s | 🏆 High: ${highScore}`;
+  info.innerText = `Score: ${score} | ⏰ ${time}s | 🏆 High: ${highScore}`;
 }
 
 updateInfo();
 
-// buat kucing
+// create cats
 const cats = [];
-for (let i = 0; i < numCats; i++) {
+for(let i=0; i<numCats; i++){
   const cat = document.createElement("div");
   cat.className = "cat";
   cat.innerText = "😺";
   area.appendChild(cat);
   cats.push(cat);
 
-  cat.addEventListener("click", () => {
-    if (time <= 0) return;
+  cat.addEventListener("click", ()=>{
+    if(time <= 0) return;
     score++;
-    updateInfo();
     moveCat(cat);
+    updateInfo();
   });
 }
 
-// gerakin satu kucing
-function moveCat(cat) {
-  const maxX = area.clientWidth - 40;
-  const maxY = area.clientHeight - 40;
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
-  cat.style.left = x + "px";
-  cat.style.top = y + "px";
-
+// move a cat
+function moveCat(cat){
+  const maxX = area.clientWidth - 50;
+  const maxY = area.clientHeight - 50;
+  const x = Math.random()*maxX;
+  const y = Math.random()*maxY;
+  cat.style.left = x+"px";
+  cat.style.top = y+"px";
   cat.classList.add("jump");
-  setTimeout(() => cat.classList.remove("jump"), 150);
+  setTimeout(()=>cat.classList.remove("jump"), 150);
 }
 
-// gerakin semua kucing
-function randomPositions() {
-  cats.forEach(cat => moveCat(cat));
-}
+// initial positions
+cats.forEach(cat => moveCat(cat));
 
 // timer
-const timer = setInterval(() => {
+const timer = setInterval(()=>{
   time--;
   updateInfo();
-  if (time <= 0) {
+  if(time <= 0){
     clearInterval(timer);
-    if (score > highScore) {
+    if(score > highScore){
       highScore = score;
       localStorage.setItem("highScore", highScore);
       info.innerText = `🎉 NEW HIGH SCORE: ${highScore}!`;
     } else {
-      info.innerText = `⏰ Habis! Skor: ${score} | 🏆 ${highScore}`;
+      info.innerText = `⏰ Time's up! Score: ${score} | 🏆 High: ${highScore}`;
     }
   }
-}, 1000);
-
-// posisi awal
-randomPositions();
+},1000);

@@ -17,8 +17,8 @@ p {
 
 .area {
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 600px;  /* big box */
+  height: 600px; /* big box */
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
@@ -26,9 +26,16 @@ p {
   overflow: hidden;
 }
 
+@media (max-width: 650px) {
+  .area {
+    width: 90%;
+    height: 400px; /* responsive for phone */
+  }
+}
+
 .cat {
   position: absolute;
-  font-size: 40px;
+  font-size: 50px; /* big cats */
   cursor: pointer;
   transition: transform 0.15s;
 }
