@@ -1,63 +1,96 @@
 const area = document.getElementById("game-area");
 const info = document.getElementById("info");
-const numCats = 6; // lebih banyak cats untuk lucu
-let score = 0;
-let time = 30;
+const restartBtn = document.getElementById("restart-btn");
 
-let highScore = localStorage.getItem("highScore") || 0;
+let numCats = 6;
+let score, time, highScore, cats, moveInterval, timer;
 
-function updateInfo() {
+function initGame(){
+  area.innerHTML = ""; // clear area
+  score = 0;
+  time = 30;
+  highScore = localStorage.getItem("highScore") || 0;
+  updateInfo();
+
+  // create cats
+  const catEmojis = ["😹","😻","😸","😺","😼","😽"];
+  cats = [];
+  for(let i=0;i<numCats;i++){
+    const cat = document.createElement("div");
+    cat.className = "cat";
+    cat.innerText = catEmojis[i % catEmojis.length];
+    area.appendChild(cat);
+    cats.push(cat);
+
+    cat.addEventListener("click", ()=>{
+      if(time <= 0) return;
+      score++;
+      animateCat(cat);
+      updateInfo();
+      flashBackground();
+    });
+  }
+
+  moveCatsRandomly();
+  moveInterval = setInterval(()=>{ if(time > 0) moveCatsRandomly(); },1200);
+
+  // timer
+  timer = setInterval(()=>{
+    time--;
+    updateInfo();
+    if(time <= 0){
+      clearInterval(timer);
+      clearInterval(moveInterval);
+      endGame();
+    }
+  },1000);
+}
+
+function updateInfo(){
   info.innerText = `Score: ${score} | ⏰ ${time}s | 🏆 High: ${highScore}`;
 }
 
-updateInfo();
+// cat animation
+function animateCat(cat){
+  cat.classList.add("jump");
+  setTimeout(()=>cat.classList.remove("jump"),200);
+}
 
-// create cats
-const catEmojis = ["😹","😻","😸","😺","😼","😽"];
-const cats = [];
+// flash background
+function flashBackground(){
+  document.body.style.background = "linear-gradient(135deg, #f6ff9e, #c1fff4, #ffb3c6)";
+  setTimeout(()=>document.body.style.background = "linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb)",200);
+}
 
-for(let i=0;i<numCats;i++){
-  const cat = document.createElement("div");
-  cat.className = "cat";
-  cat.innerText = catEmojis[i % catEmojis.length];
-  area.appendChild(cat);
-  cats.push(cat);
-
-  cat.addEventListener("click", ()=>{
-    if(time <= 0) return;
-    score++;
-    moveCat(cat);
-    updateInfo();
+// move cats randomly
+function moveCatsRandomly(){
+  cats.forEach(cat=>{
+    const maxX = area.clientWidth - 50;
+    const maxY = area.clientHeight - 50;
+    const x = Math.random()*maxX;
+    const y = Math.random()*maxY;
+    cat.style.left = x+"px";
+    cat.style.top = y+"px";
   });
 }
 
-// move cat
-function moveCat(cat){
-  const maxX = area.clientWidth - 50;
-  const maxY = area.clientHeight - 50;
-  const x = Math.random()*maxX;
-  const y = Math.random()*maxY;
-  cat.style.left = x+"px";
-  cat.style.top = y+"px";
-  cat.classList.add("jump");
-  setTimeout(()=>cat.classList.remove("jump"), 150);
+// end game
+function endGame(){
+  if(score > highScore){
+    highScore = score;
+    localStorage.setItem("highScore", highScore);
+    info.innerText = `🎉 NEW HIGH SCORE: ${highScore}!`;
+  } else {
+    info.innerText = `⏰ Time's up! Score: ${score} | 🏆 High: ${highScore}`;
+  }
 }
 
-// initial positions
-cats.forEach(cat=>moveCat(cat));
+// restart button
+restartBtn.addEventListener("click", ()=>{
+  clearInterval(timer);
+  clearInterval(moveInterval);
+  initGame();
+});
 
-// timer
-const timer = setInterval(()=>{
-  time--;
-  updateInfo();
-  if(time <= 0){
-    clearInterval(timer);
-    if(score > highScore){
-      highScore = score;
-      localStorage.setItem("highScore", highScore);
-      info.innerText = `🎉 NEW HIGH SCORE: ${highScore}!`;
-    } else {
-      info.innerText = `⏰ Time's up! Score: ${score} | 🏆 High: ${highScore}`;
-    }
-  }
-},1000);
+// start game
+initGame();
